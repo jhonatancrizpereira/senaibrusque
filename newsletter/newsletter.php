@@ -1,14 +1,11 @@
 <?php
-
 //Faz a requisição de dados paraconexão com o BD
-if($_SERVER['SERVER_ADDR'] == '127.0.0.1')
+if ($_SERVER['SERVER_ADDR'] == '127.0.0.1')
     require_once 'dbconfig.php';
 else
-    require_once 'dbconfighostinger.php';
-
+    require_once 'dbconfigHstinger.php';
 //Inclusão da função que envia e-mail
-include_once 'emailconfirma.php';
-
+include_once 'emailConfirma.php';
 /*
  * Conexão com o banco de dados 
  */
@@ -18,11 +15,9 @@ try {//Criação do objeto $conn - conexão
 } catch (PDOException $pe) {
     die("Não foi possível se conectar ao banco $dbname :" . $pe->getMessage());
 }
-
 function gerarCodigo() {
     return sha1(mt_rand());
 }
-
 /**
  * Função que converte uma data no formato MySQL
  * AAAA-MM-DD HH:II:SS -> DD/MM/AAAA HH:II:SS
@@ -30,30 +25,26 @@ function gerarCodigo() {
  * @param type $dataMySQL
  * @return type $dataPHP
  */
-function converteDataMySQLPHP($dataMySQL){
+function converteDataMySQLPHP($dataMySQL) {
     $dataPHP = $dataMySQL;
-    if($dataMySQL){
-       $dataPHP = date('d/m/Y G:i:s',  strtotime($dataMySQL)) ;
+    if ($dataMySQL) {
+        $dataPHP = date('d/m/Y G:i:s', strtotime($dataMySQL));
     }
     return $dataPHP;
 }
-
 /**
- * Verifica se o botão cadastrar foi pressionado
+ * Verifica se vem e-mail
  * 
  */
-if (isset($_POST['btn'])) {
-
+if (isset($_POST['email'])) {
     /**
      * Recepção de dados
      */
     if (isset($_POST['email']) && !empty($_POST['email'])) {
         //Filtragem de entrada ded dados
         //$email = $_POST['email']; //Não é correto
-
         $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
         $cod = gerarCodigo();
-
         //String SQL
         $sql = "INSERT INTO newsletter(email,cod,dtCadastro) "
                 . "values(:email,:cod,now())";
@@ -61,29 +52,29 @@ if (isset($_POST['btn'])) {
             ':cod' => $cod);
         $p = $conn->prepare($sql);
         $q = $p->execute($parametros);
-        
         /**
          * Envio de e-mail para confirmação
          */
-        
         //Link para ser enviado por e-mail
-            $link = "<a href='http://"; 
-            $link .= $_SERVER['SERVER_NAME'];        
-            $link .= $_SERVER['PHP_SELF'];
-            $link .= "?cod=e&hash=$cod' ";
-            $link .= "title='Clique para confirmar o e-mail'>";
-            $link .= "Clique para confirmar seu e-mail";
-            $link .= "</a>";
-            
-            emailConfirma($email,$link);
-            
+        $link = "<a href='http://";
+        $link .= $_SERVER['SERVER_NAME'];
+        $link .= $_SERVER['PHP_SELF'];
+        $link .= "?cod=e&hash=$cod' ";
+        $link .= "title='Clique para confirmar o e-mail'>";
+        $link .= "Clique para confirmar seu e-mail";
+        $link .= "</a>";
+        // Resposta para a chamada do AJAX
+        //Confirma o envio do e-mail
+        if (emailConfirma($email, $link)) {
+            echo "success";
+        } else {
+            echo "invalid";
+        }
         /**
          * ----------------------------------
          */
-
         //Listagem de e-mails
-        header('Location: newsletter.php?cod=listar');
-        
+        //header('Location: cadastro.php?cod=listar');
         /**
          * Tarefa de casa
          * Criar um e-mail HTML, enviando um link
@@ -91,74 +82,60 @@ if (isset($_POST['btn'])) {
          * e confirmar seu e-mail
          */
     } else {
-        header('Location: index.php');
+        header('Location: ../index.php');
     }
 } elseif (isset($_GET['cod'])) {
-
     if ($_GET['cod'] == 'listar') {
         //LISTAGEM DE E-MAILS
         // select * from newsletter // desaconselhado
         $sql = "SELECT email,cod,situacao,dtCadastro,dtAtualizacao "
                 . "from newsletter";
-
         $q = $conn->query($sql);
         $q->setFetchMode(PDO::FETCH_ASSOC);
-
         while ($r = $q->fetch()) {
             //desmpilhando os pratos
             echo "<p style='color:";
             echo $r['situacao'] ? 'green' : 'red';
             echo ";'>";
             echo $r['email'] . "\t";
-            
             //Link de exclusão
             echo "<a href='newsletter.php?cod=d&hash=$r[cod]' ";
             echo "title='Clique para excluir'>";
             echo $r['cod'];
             echo "</a>" . "\t";
-            
             //Link para ser enviado por e-mail
-            $link = "<a href='". $_SERVER['PHP_SELF'];
+            $link = "<a href='" . $_SERVER['PHP_SELF'];
             $link .= "?cod=e&hash=$r[cod]' ";
             $link .= "title='Clique para confirmar o e-mail'>";
             $link .= $r['situacao'] . "\t";
             $link .= "</a>";
-            
             echo $link;
-            
             echo converteDataMySQLPHP($r['dtCadastro']) . "\t";
             echo converteDataMySQLPHP($r['dtAtualizacao']);
             echo "</p>\n";
         }
     }
-
     //Exclusão de um registro
-    elseif($_GET['cod'] == 'd' && isset ($_GET['hash'])){
+    elseif ($_GET['cod'] == 'd' && isset($_GET['hash'])) {
         $sql = "delete from newsletter where cod = :hash";
         $hash = filter_input(INPUT_GET, 'hash', FILTER_SANITIZE_STRING);
-        
         //echo "<h1>$hash</h1>";
-        
         $p = $conn->prepare($sql);
-        $q = $p->execute(array(':hash'=>$hash));
-        
+        $q = $p->execute(array(':hash' => $hash));
         header("Location: newsletter.php?cod=listar");
     }
     //Atualização da situação cadastral
     //Confirmação de e-mail
-    elseif($_GET['cod'] == 'e' && isset ($_GET['hash'])){
-        
+    elseif ($_GET['cod'] == 'e' && isset($_GET['hash'])) {
         $sql = "update newsletter set situacao=1, "
                 . "dtAtualizacao = now() where cod = :hash";
-        
-        $hash = filter_input(INPUT_GET, 'hash', 
-                FILTER_SANITIZE_STRING);
-        
+        $hash = filter_input(INPUT_GET, 'hash', FILTER_SANITIZE_STRING);
         //echo "<h1>$hash</h1>";
-        
         $p = $conn->prepare($sql);
-        $q = $p->execute(array(':hash'=>$hash));
-        
+        $q = $p->execute(array(':hash' => $hash));
+        //TODO Criar ISSUE no Github
+        //Criar uma página de resposta! de confirmação de cadastro
+        //de e-mail
         header("Location: newsletter.php?cod=listar");
     }
     //Validação do e-mail
