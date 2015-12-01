@@ -58,6 +58,16 @@ Seções
 #contato {padding-top:50px;height:auto;color: #fff; background-color: whitesmoke;}
 #local {padding-top:50px;height:600px;color: #fff; background-color: whitesmoke;}
 
+/* alteração da cor do texto da janela modal para não aparecer em branco */
+#cortextomodal{
+    color:#333; 
+}
+/*
+#alturadanoticia{
+    height: 300px;
+    border: 1px solid #333;
+} */
+
 
 /**
 Carrossel de imagens
