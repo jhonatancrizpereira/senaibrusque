@@ -21,7 +21,8 @@
             <h1>SENAI/SC Brusque</h1>
             <p>Alo Ha mundo do Bootstrap</p>
 
-            <?php include 'formNewsletter.php'; ?>
+            <?php include 'formCadastro.php' ?>
+           
         </header>
 
         <!-- Barra de Navegação -->
@@ -123,10 +124,7 @@
             <p>Try to scroll this section and look at the navigation bar while scrolling! Try to scroll this section and look at the navigation bar while scrolling!</p>
         </section>
 
-        <section id="noticias" class="container-fluid">
-            <h1>Notícias</h1>
-            <?php include 'noticias.php'; ?>
-        </section>
+        <?php include 'noticia.php' ?>
 
         <section id="fotos" class="container-fluid">
             <h1>Fotos</h1>
@@ -156,6 +154,7 @@
         <script src="js/validator.js"></script>
         <script src="js/meuscript.js"></script>
         <script src="js/formScript.js"></script>
+        <script src="js/cadastroScript.js"></script>
 
     </body>
 </html>
