@@ -26,7 +26,7 @@ function submitForm() {
 
     $.ajax({
         type: "POST",
-        url: "formProcess.php",
+        url: "contato/formProcess.php",
         data: "name=" + name + "&email=" + email + "&message=" + message,
         success: function (text) {
             if (text == "success") {
@@ -60,4 +60,3 @@ function formError() {
         $(this).removeClass();
     });
 }
-
