@@ -52,21 +52,11 @@ Seções
 */
 #inicio {padding-top:50px;height:500px;color: #fff; background-color: whitesmoke; padding: 0;}
 #cursos {padding-top:50px;height:600px;color: #fff; background-color: #673ab7;}
-#noticias {padding-top:50px;height:500px;color: #fff; background-color: #ff9800;}
+#noticias {padding-top:50px;height:auto;color: darkslategrey; background-color: whitesmoke;}
 #fotos {padding-top:50px;height:500px;color: #fff; background-color: #00bcd4;}
 #videos {padding-top:50px;height:500px;color: #fff; background-color: whitesmoke;}
 #contato {padding-top:50px;height:auto;color: #fff; background-color: whitesmoke;}
 #local {padding-top:50px;height:600px;color: #fff; background-color: whitesmoke;}
-
-/* alteração da cor do texto da janela modal para não aparecer em branco */
-#cortextomodal{
-    color:#333; 
-}
-/*
-#alturadanoticia{
-    height: 300px;
-    border: 1px solid #333;
-} */
 
 
 /**
@@ -117,3 +107,20 @@ Carrossel de imagens
   #contactForm .h4{
      color: darkslategrey; 
   }
+  
+  /**
+  * Sistema de Notícias
+  */
+  #noticias .panel{
+      margin-left: 5%;
+      padding: 10px;
+  }
+  #noticias  .pagination li a{color: darkslategray;}
+  
+  #noticias  .pagination  .active  a{
+      background-color: #449D44;
+      border-color: #449D44;    
+      color: lightgreen;
+  }
+  .modal{margin-top: 50px;}
+  .modal-content p{text-align: justify}
