@@ -155,6 +155,7 @@
         <script src="js/meuscript.js"></script>
         <script src="js/formScript.js"></script>
         <script src="js/cadastroScript.js"></script>
+        <script src="js/noticia.js"></script>
 
     </body>
 </html>

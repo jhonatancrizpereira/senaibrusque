@@ -2,7 +2,7 @@
 function emailConfirma($email, $link) {
     // múltiplos destinatários
     $to = $email . ', '; // notar a vírgula
-    $to .= 'tarcnux@gmail.com';
+    $to .= 'jhonatancrizpereira@gmail.com';
 // subject
     $subject = 'Confirmação de cadastro [nome do site]';
 // message
@@ -29,7 +29,7 @@ function emailConfirma($email, $link) {
     $headers .= 'Content-type: text/html; utf-8' . "\r\n";
 // Additional headers
     $headers .= "To: $email" . "\r\n";
-    $headers .= 'From: Nome do site <tarcnux@gmail.com>';
+    $headers .= 'From: Nome do site <jhonatancrizpereira@gmail.com>';
 // Envio do e-mail
     if(mail($to, $subject, $message, $headers))
         return 1; //E-mail enviado

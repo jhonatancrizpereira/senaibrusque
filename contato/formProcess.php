@@ -3,7 +3,7 @@ $name = $_POST["name"];
 $email = $_POST["email"];
 $message = $_POST["message"];
  
-$EmailTo = "tarcnux@gmail.com";
+$EmailTo = "jhonatancrizpereira@gmail.com";
 $Subject = "Mensagem via formulário de contato";
  
 // prepare email body text
